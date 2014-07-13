@@ -16,6 +16,16 @@
     });
   };
 
+  PSD.container.brightness = 0;
+
+  PSD.container.animate({
+    properties: {
+      brightness: 100
+    },
+    curve: "linear",
+    time: 0.5
+  });
+
   Rectangle = new Layer({
     width: 400,
     height: 400,
@@ -25,17 +35,38 @@
     borderRadius: "6px"
   });
 
-  Rectangle.superLayer = PSD.container;
+  Rectangle.shadowColor = "rgba(0, 0, 0, 0.2)";
 
-  Rectangle.scale = 0.01;
+  Rectangle.superLayer = PSD.container;
 
   Rectangle.center();
 
-  Rectangle.animate({
-    properties: {
+  Rectangle.states.add({
+    centerInvisible: {
+      scale: 0.01
+    },
+    centerBig: {
       scale: 1
     },
-    time: 0.2
+    rotated: {
+      rotation: 90,
+      height: 800,
+      y: -50
+    }
+  });
+
+  Rectangle.states.animationOptions = {
+    curve: "spring(200, 20, 10)"
+  };
+
+  Rectangle.states.switchInstant("centerInvisible");
+
+  utils.delay(0.5, function() {
+    return Rectangle.states["switch"]("centerBig");
+  });
+
+  utils.delay(1, function() {
+    return Rectangle.states["switch"]("rotated");
   });
 
 }).call(this);
