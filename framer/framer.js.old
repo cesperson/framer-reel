@@ -1728,7 +1728,7 @@ layerProperty = function(name, cssProperty, fallback, validator, set) {
       return this._getPropertyValue(name);
     },
     set: function(value) {
-      if ((typeof validator === "function" ? validator(value) : void 0) === false) {
+      if (validator(value) === false) {
         throw Error("value '" + value + "' of type " + (typeof value) + " is not valid for a Layer." + name + " property");
       }
       this._setPropertyValue(name, value);
@@ -2686,6 +2686,14 @@ exports.LayerStates = (function(_super) {
     return this["switch"](stateName, null, true);
   };
 
+  LayerStates.prototype.transform = function(stateName, animationOptions, instant) {
+    if (instant == null) {
+      instant = false;
+    }
+  };
+
+  LayerStates.prototype.transformInstant = function(stateName) {};
+
   LayerStates.define("state", {
     get: function() {
       return this._currentState;
@@ -2821,10 +2829,7 @@ exports.LayerStyle = {
     }
   },
   boxShadow: function(layer) {
-    if (!layer.shadowColor) {
-      return "";
-    }
-    return "" + layer.shadowX + "px " + layer.shadowY + "px " + layer.shadowBlur + "px " + layer.shadowSpread + "px " + layer.shadowColor;
+    return "" + layer.shadowX + "px " + layer.shadowY + "px " + layer.shadowBlur + " " + layer.shadowSpread + " " + layer.shadowColor;
   }
 };
 

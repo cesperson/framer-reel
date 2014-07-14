@@ -1,6 +1,5 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var AnimatorClasses, BezierCurveAnimator, Config, Defaults, EventEmitter, Frame, LinearAnimator, SpringDHOAnimator, SpringRK4Animator, Utils, evaluateRelativeProperty, isRelativeProperty, numberRE, relativePropertyRE, _, _runningAnimations,
-  __slice = [].slice,
+var AnimatorClasses, BezierCurveAnimator, Config, Defaults, EventEmitter, Frame, LinearAnimator, SpringDHOAnimator, SpringRK4Animator, Utils, _, _runningAnimations,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -35,24 +34,6 @@ AnimatorClasses = {
 AnimatorClasses["spring"] = AnimatorClasses["spring-rk4"];
 
 AnimatorClasses["cubic-bezier"] = AnimatorClasses["bezier-curve"];
-
-numberRE = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/;
-
-relativePropertyRE = new RegExp('^(?:([+-])=|)(' + numberRE.source + ')([a-z%]*)$', 'i');
-
-isRelativeProperty = function(v) {
-  return _.isString(v) && relativePropertyRE.test(v);
-};
-
-evaluateRelativeProperty = function(target, k, v) {
-  var match, number, rest, sign, unit, _ref;
-  _ref = relativePropertyRE.exec(v), match = _ref[0], sign = _ref[1], number = _ref[2], unit = _ref[3], rest = 5 <= _ref.length ? __slice.call(_ref, 4) : [];
-  if (sign) {
-    return target[k] + (sign + 1) * number;
-  } else {
-    return +number;
-  }
-};
 
 _runningAnimations = [];
 
@@ -97,7 +78,7 @@ exports.Animation = (function(_super) {
     animatableProperties = {};
     for (k in properties) {
       v = properties[k];
-      if (_.isNumber(v) || isRelativeProperty(v)) {
+      if (_.isNumber(v)) {
         animatableProperties[k] = v;
       }
     }
@@ -182,9 +163,6 @@ exports.Animation = (function(_super) {
     _ref = this.options.properties;
     for (k in _ref) {
       v = _ref[k];
-      if (isRelativeProperty(v)) {
-        v = evaluateRelativeProperty(target, k, v);
-      }
       if (stateA[k] !== v) {
         stateB[k] = v;
       }
@@ -273,7 +251,7 @@ exports.Animation = (function(_super) {
 })(EventEmitter);
 
 
-},{"./Animators/BezierCurveAnimator":4,"./Animators/LinearAnimator":5,"./Animators/SpringDHOAnimator":6,"./Animators/SpringRK4Animator":7,"./Config":11,"./Defaults":13,"./EventEmitter":14,"./Frame":18,"./Underscore":28,"./Utils":29}],2:[function(require,module,exports){
+},{"./Animators/BezierCurveAnimator":4,"./Animators/LinearAnimator":5,"./Animators/SpringDHOAnimator":6,"./Animators/SpringRK4Animator":7,"./Config":10,"./Defaults":12,"./EventEmitter":13,"./Frame":15,"./Underscore":23,"./Utils":24}],2:[function(require,module,exports){
 var AnimationLoop, AnimationLoopIndexKey, Config, EventEmitter, Utils, _;
 
 _ = require("./Underscore")._;
@@ -351,7 +329,7 @@ AnimationLoop = {
 exports.AnimationLoop = AnimationLoop;
 
 
-},{"./Config":11,"./EventEmitter":14,"./Underscore":28,"./Utils":29}],3:[function(require,module,exports){
+},{"./Config":10,"./EventEmitter":13,"./Underscore":23,"./Utils":24}],3:[function(require,module,exports){
 var AnimationLoop, Config, EventEmitter, Utils,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -401,7 +379,7 @@ exports.Animator = (function(_super) {
 })(EventEmitter);
 
 
-},{"./AnimationLoop":2,"./Config":11,"./EventEmitter":14,"./Utils":29}],4:[function(require,module,exports){
+},{"./AnimationLoop":2,"./Config":10,"./EventEmitter":13,"./Utils":24}],4:[function(require,module,exports){
 var Animator, BezierCurveDefaults, UnitBezier, Utils, _, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -541,7 +519,7 @@ UnitBezier = (function() {
 })();
 
 
-},{"../Animator":3,"../Underscore":28,"../Utils":29}],5:[function(require,module,exports){
+},{"../Animator":3,"../Underscore":23,"../Utils":24}],5:[function(require,module,exports){
 var Animator, Utils, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -582,7 +560,7 @@ exports.LinearAnimator = (function(_super) {
 })(Animator);
 
 
-},{"../Animator":3,"../Utils":29}],6:[function(require,module,exports){
+},{"../Animator":3,"../Utils":24}],6:[function(require,module,exports){
 var Animator, Utils, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -640,7 +618,7 @@ exports.SpringDHOAnimator = (function(_super) {
 })(Animator);
 
 
-},{"../Animator":3,"../Utils":29}],7:[function(require,module,exports){
+},{"../Animator":3,"../Utils":24}],7:[function(require,module,exports){
 var Animator, Utils, springAccelerationForState, springEvaluateState, springEvaluateStateWithDerivative, springIntegrateState, _ref,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -744,45 +722,7 @@ springIntegrateState = function(state, speed) {
 };
 
 
-},{"../Animator":3,"../Utils":29}],8:[function(require,module,exports){
-var Layer,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Layer = require("./Layer").Layer;
-
-"Todo: make it work in a parent layer";
-
-exports.BackgroundLayer = (function(_super) {
-  __extends(BackgroundLayer, _super);
-
-  function BackgroundLayer(options) {
-    if (options == null) {
-      options = {};
-    }
-    this.layout = __bind(this.layout, this);
-    if (options.backgroundColor == null) {
-      options.backgroundColor = "#fff";
-    }
-    options.name = "Background";
-    BackgroundLayer.__super__.constructor.call(this, options);
-    this.sendToBack();
-    this.layout();
-    Screen.on("resize", this.layout);
-  }
-
-  BackgroundLayer.prototype.layout = function() {
-    this.width = Screen.width;
-    return this.height = Screen.height;
-  };
-
-  return BackgroundLayer;
-
-})(Layer);
-
-
-},{"./Layer":21}],9:[function(require,module,exports){
+},{"../Animator":3,"../Utils":24}],8:[function(require,module,exports){
 var CounterKey, DefinedPropertiesKey, DefinedPropertiesValuesKey, EventEmitter, Utils, _,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -923,7 +863,7 @@ exports.BaseClass = (function(_super) {
 })(EventEmitter);
 
 
-},{"./EventEmitter":14,"./Underscore":28,"./Utils":29}],10:[function(require,module,exports){
+},{"./EventEmitter":13,"./Underscore":23,"./Utils":24}],9:[function(require,module,exports){
 var CompatImageView, CompatLayer, CompatScrollView, CompatView, Layer, compatProperty, compatWarning, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1033,7 +973,7 @@ window.ScrollView = CompatScrollView;
 window.utils = window.Utils;
 
 
-},{"./Layer":21}],11:[function(require,module,exports){
+},{"./Layer":18}],10:[function(require,module,exports){
 var Utils;
 
 Utils = require("./Utils");
@@ -1041,12 +981,7 @@ Utils = require("./Utils");
 exports.Config = {
   targetFPS: 60,
   rootBaseCSS: {
-    "-webkit-perspective": 1000,
-    "position": "absolute",
-    "left": 0,
-    "top": 0,
-    "right": 0,
-    "bottom": 0
+    "-webkit-perspective": 1000
   },
   layerBaseCSS: {
     "display": "block",
@@ -1060,7 +995,7 @@ exports.Config = {
 };
 
 
-},{"./Utils":29}],12:[function(require,module,exports){
+},{"./Utils":24}],11:[function(require,module,exports){
 var EventKeys, Utils, createDebugLayer, errorWarning, hideDebug, showDebug, toggleDebug, _debugLayers, _errorWarningLayer;
 
 Utils = require("./Utils");
@@ -1163,7 +1098,7 @@ errorWarning = function() {
 window.onerror = errorWarning;
 
 
-},{"./Utils":29}],13:[function(require,module,exports){
+},{"./Utils":24}],12:[function(require,module,exports){
 var Originals, Utils, _;
 
 _ = require("./Underscore")._;
@@ -1205,7 +1140,7 @@ exports.Defaults = {
 };
 
 
-},{"./Underscore":28,"./Utils":29}],14:[function(require,module,exports){
+},{"./Underscore":23,"./Utils":24}],13:[function(require,module,exports){
 var EventEmitterEventsKey, _,
   __slice = [].slice;
 
@@ -1294,7 +1229,7 @@ exports.EventEmitter = (function() {
 })();
 
 
-},{"./Underscore":28}],15:[function(require,module,exports){
+},{"./Underscore":23}],14:[function(require,module,exports){
 var Events, Utils, _;
 
 _ = require("./Underscore")._;
@@ -1342,72 +1277,7 @@ Events.touchEvent = function(event) {
 exports.Events = Events;
 
 
-},{"./Underscore":28,"./Utils":29}],16:[function(require,module,exports){
-exports.MobileScrollFix = require("./MobileScrollFix");
-
-
-},{"./MobileScrollFix":17}],17:[function(require,module,exports){
-var Utils,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Utils = require("../Utils");
-
-exports.enable = function() {
-  var MobileScrollFixLayer, handleScrollingLayerTouchMove, handleScrollingLayerTouchStart;
-  handleScrollingLayerTouchMove = function(event) {
-    return event.stopPropagation();
-  };
-  handleScrollingLayerTouchStart = function(event) {
-    var element, startTopScroll;
-    element = this._element;
-    startTopScroll = element.scrollTop;
-    if (startTopScroll <= 0) {
-      element.scrollTop = 1;
-    }
-    if (startTopScroll + element.offsetHeight >= element.scrollHeight) {
-      return element.scrollTop = element.scrollHeight - element.offsetHeight - 1;
-    }
-  };
-  MobileScrollFixLayer = (function(_super) {
-    __extends(MobileScrollFixLayer, _super);
-
-    function MobileScrollFixLayer(options) {
-      this.__createRootElement = __bind(this.__createRootElement, this);
-      this._updateScrollListeners = __bind(this._updateScrollListeners, this);
-      MobileScrollFixLayer.__super__.constructor.call(this, options);
-      this.on("change:scrollVertical", this._updateScrollListeners);
-      this._updateScrollListeners();
-    }
-
-    MobileScrollFixLayer.prototype._updateScrollListeners = function() {
-      if (this.scrollVertical === true) {
-        this.on("touchmove", handleScrollingLayerTouchMove);
-        return this.on("touchstart", handleScrollingLayerTouchStart);
-      } else {
-        this.off("touchmove", handleScrollingLayerTouchMove);
-        return this.off("touchstart", handleScrollingLayerTouchStart);
-      }
-    };
-
-    MobileScrollFixLayer.prototype.__createRootElement = function() {
-      var rootElement;
-      rootElement = MobileScrollFixLayer.__super__.__createRootElement.apply(this, arguments);
-      rootElement.addEventListener("touchmove", function(event) {
-        return event.preventDefault();
-      });
-      return rootElement;
-    };
-
-    return MobileScrollFixLayer;
-
-  })(Framer.Layer);
-  return window.Layer = window.Framer.Layer = MobileScrollFixLayer;
-};
-
-
-},{"../Utils":29}],18:[function(require,module,exports){
+},{"./Underscore":23,"./Utils":24}],15:[function(require,module,exports){
 var BaseClass,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1485,7 +1355,7 @@ exports.Frame = (function(_super) {
 })(BaseClass);
 
 
-},{"./BaseClass":9}],19:[function(require,module,exports){
+},{"./BaseClass":8}],16:[function(require,module,exports){
 var Defaults, Framer, _;
 
 _ = require("./Underscore")._;
@@ -1500,15 +1370,9 @@ Framer.Frame = (require("./Frame")).Frame;
 
 Framer.Layer = (require("./Layer")).Layer;
 
-Framer.BackgroundLayer = (require("./BackgroundLayer")).BackgroundLayer;
-
 Framer.Events = (require("./Events")).Events;
 
 Framer.Animation = (require("./Animation")).Animation;
-
-Framer.Screen = (require("./Screen")).Screen;
-
-Framer.print = (require("./Print")).print;
 
 if (window) {
   _.extend(window, Framer);
@@ -1538,17 +1402,11 @@ Framer.Debug = (require("./Debug")).Debug;
 
 Framer.Session = (require("./Session")).Session;
 
-Framer.Extras = require("./Extras/Extras");
-
 if (window) {
   window.Framer = Framer;
 }
 
 require("./Compat");
-
-if (Utils.isMobile()) {
-  Framer.Extras.MobileScrollFix.enable();
-}
 
 Defaults = (require("./Defaults")).Defaults;
 
@@ -1557,7 +1415,7 @@ Framer.resetDefaults = Defaults.reset;
 Framer.resetDefaults();
 
 
-},{"./Animation":1,"./AnimationLoop":2,"./Animators/BezierCurveAnimator":4,"./Animators/LinearAnimator":5,"./Animators/SpringDHOAnimator":6,"./Animators/SpringRK4Animator":7,"./BackgroundLayer":8,"./BaseClass":9,"./Compat":10,"./Config":11,"./Debug":12,"./Defaults":13,"./EventEmitter":14,"./Events":15,"./Extras/Extras":16,"./Frame":18,"./Importer":20,"./Layer":21,"./LayerStyle":24,"./Print":25,"./Screen":26,"./Session":27,"./Underscore":28,"./Utils":29}],20:[function(require,module,exports){
+},{"./Animation":1,"./AnimationLoop":2,"./Animators/BezierCurveAnimator":4,"./Animators/LinearAnimator":5,"./Animators/SpringDHOAnimator":6,"./Animators/SpringRK4Animator":7,"./BaseClass":8,"./Compat":9,"./Config":10,"./Debug":11,"./Defaults":12,"./EventEmitter":13,"./Events":14,"./Frame":15,"./Importer":17,"./Layer":18,"./LayerStyle":21,"./Session":22,"./Underscore":23,"./Utils":24}],17:[function(require,module,exports){
 var ChromeAlert, Utils, _;
 
 _ = require("./Underscore")._;
@@ -1684,7 +1542,7 @@ exports.Importer.load = function(path) {
 };
 
 
-},{"./Underscore":28,"./Utils":29}],21:[function(require,module,exports){
+},{"./Underscore":23,"./Utils":24}],18:[function(require,module,exports){
 var Animation, BaseClass, Config, Defaults, EventEmitter, Frame, LayerDraggable, LayerStates, LayerStyle, Session, Utils, frameProperty, layerProperty, layerStyleProperty, _,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -1728,7 +1586,7 @@ layerProperty = function(name, cssProperty, fallback, validator, set) {
       return this._getPropertyValue(name);
     },
     set: function(value) {
-      if ((typeof validator === "function" ? validator(value) : void 0) === false) {
+      if (validator(value) === false) {
         throw Error("value '" + value + "' of type " + (typeof value) + " is not valid for a Layer." + name + " property");
       }
       this._setPropertyValue(name, value);
@@ -1779,7 +1637,6 @@ exports.Layer = (function(_super) {
     }
     this.addListener = __bind(this.addListener, this);
     this.__insertElement = __bind(this.__insertElement, this);
-    this.__createRootElement = __bind(this.__createRootElement, this);
     Session._LayerList.push(this);
     this._createElement();
     this._setDefaultCSS();
@@ -1852,12 +1709,6 @@ exports.Layer = (function(_super) {
 
   Layer.define("scale", layerProperty("scale", "webkitTransform", 1, _.isNumber));
 
-  Layer.define("skewX", layerProperty("skewX", "webkitTransform", 0, _.isNumber));
-
-  Layer.define("skewY", layerProperty("skewY", "webkitTransform", 0, _.isNumber));
-
-  Layer.define("skew", layerProperty("skew", "webkitTransform", 0, _.isNumber));
-
   Layer.define("originX", layerProperty("originX", "webkitTransformOrigin", 0.5, _.isNumber));
 
   Layer.define("originY", layerProperty("originY", "webkitTransformOrigin", 0.5, _.isNumber));
@@ -1886,19 +1737,7 @@ exports.Layer = (function(_super) {
 
   Layer.define("sepia", layerProperty("sepia", "webkitFilter", 0, _.isNumber));
 
-  Layer.define("shadowX", layerProperty("shadowX", "boxShadow", 0, _.isNumber));
-
-  Layer.define("shadowY", layerProperty("shadowY", "boxShadow", 0, _.isNumber));
-
-  Layer.define("shadowBlur", layerProperty("shadowBlur", "boxShadow", 0, _.isNumber));
-
-  Layer.define("shadowSpread", layerProperty("shadowSpread", "boxShadow", 0, _.isNumber));
-
-  Layer.define("shadowColor", layerProperty("shadowColor", "boxShadow", ""));
-
   Layer.define("backgroundColor", layerStyleProperty("backgroundColor"));
-
-  Layer.define("color", layerStyleProperty("color"));
 
   Layer.define("borderRadius", layerStyleProperty("borderRadius"));
 
@@ -2048,18 +1887,12 @@ exports.Layer = (function(_super) {
     return Utils.domComplete(this.__insertElement);
   };
 
-  Layer.prototype.__createRootElement = function() {
-    var element;
-    element = document.createElement("div");
-    element.id = "FramerRoot";
-    _.extend(element.style, Config.rootBaseCSS);
-    document.body.appendChild(element);
-    return element;
-  };
-
   Layer.prototype.__insertElement = function() {
-    if (Session._RootElement == null) {
-      Session._RootElement = this.__createRootElement();
+    if (!Session._RootElement) {
+      Session._RootElement = document.createElement("div");
+      Session._RootElement.id = "FramerRoot";
+      _.extend(Session._RootElement.style, Config.rootBaseCSS);
+      document.body.appendChild(Session._RootElement);
     }
     return Session._RootElement.appendChild(this._element);
   };
@@ -2117,7 +1950,7 @@ exports.Layer = (function(_super) {
       this.backgroundColor = null;
       this._setPropertyValue("image", value);
       imageUrl = value;
-      if (Utils.isLocal() && !imageUrl.match(/^https?:\/\//)) {
+      if (Utils.isLocal()) {
         imageUrl += "?nocache=" + (Date.now());
       }
       if ((_ref = this.events) != null ? _ref.hasOwnProperty("load" || ((_ref1 = this.events) != null ? _ref1.hasOwnProperty("error") : void 0)) : void 0) {
@@ -2341,7 +2174,7 @@ exports.Layer = (function(_super) {
     }
   });
 
-  Layer.prototype.addListener = function(eventName, originalListener) {
+  Layer.prototype.addListener = function(event, originalListener) {
     var listener, _base,
       _this = this;
     listener = function() {
@@ -2350,28 +2183,26 @@ exports.Layer = (function(_super) {
       return originalListener.call.apply(originalListener, [_this].concat(__slice.call(args), [_this]));
     };
     originalListener.modifiedListener = listener;
-    Layer.__super__.addListener.call(this, eventName, listener);
-    this._element.addEventListener(eventName, listener);
+    Layer.__super__.addListener.call(this, event, listener);
+    this._element.addEventListener(event, listener);
     if (this._eventListeners == null) {
       this._eventListeners = {};
     }
-    if ((_base = this._eventListeners)[eventName] == null) {
-      _base[eventName] = [];
+    if ((_base = this._eventListeners)[event] == null) {
+      _base[event] = [];
     }
-    this._eventListeners[eventName].push(listener);
-    if (!_.startsWith(eventName, "change:")) {
-      return this.ignoreEvents = false;
-    }
+    this._eventListeners[event].push(listener);
+    return this.ignoreEvents = false;
   };
 
-  Layer.prototype.removeListener = function(eventName, listener) {
+  Layer.prototype.removeListener = function(event, listener) {
     if (listener.modifiedListener) {
       listener = listener.modifiedListener;
     }
-    Layer.__super__.removeListener.call(this, eventName, listener);
-    this._element.removeEventListener(eventName, listener);
+    Layer.__super__.removeListener.call(this, event, listener);
+    this._element.removeEventListener(event, listener);
     if (this._eventListeners) {
-      return this._eventListeners[eventName] = _.without(this._eventListeners[eventName], listener);
+      return this._eventListeners[event] = _.without(this._eventListeners[event], listener);
     }
   };
 
@@ -2410,7 +2241,7 @@ exports.Layer.Layers = function() {
 };
 
 
-},{"./Animation":1,"./BaseClass":9,"./Config":11,"./Defaults":13,"./EventEmitter":14,"./Frame":18,"./LayerDraggable":22,"./LayerStates":23,"./LayerStyle":24,"./Session":27,"./Underscore":28,"./Utils":29}],22:[function(require,module,exports){
+},{"./Animation":1,"./BaseClass":8,"./Config":10,"./Defaults":12,"./EventEmitter":13,"./Frame":15,"./LayerDraggable":19,"./LayerStates":20,"./LayerStyle":21,"./Session":22,"./Underscore":23,"./Utils":24}],19:[function(require,module,exports){
 var EventEmitter, Events, Utils, _,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -2575,7 +2406,7 @@ exports.LayerDraggable = (function(_super) {
 })(EventEmitter);
 
 
-},{"./EventEmitter":14,"./Events":15,"./Underscore":28,"./Utils":29}],23:[function(require,module,exports){
+},{"./EventEmitter":13,"./Events":14,"./Underscore":23,"./Utils":24}],20:[function(require,module,exports){
 var BaseClass, Defaults, Events, LayerStatesIgnoredKeys, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -2741,7 +2572,7 @@ exports.LayerStates = (function(_super) {
 })(BaseClass);
 
 
-},{"./BaseClass":9,"./Defaults":13,"./Events":15,"./Underscore":28}],24:[function(require,module,exports){
+},{"./BaseClass":8,"./Defaults":12,"./Events":14,"./Underscore":23}],21:[function(require,module,exports){
 var filterFormat, _WebkitProperties;
 
 filterFormat = function(value, unit) {
@@ -2808,7 +2639,7 @@ exports.LayerStyle = {
     return css.join(" ");
   },
   webkitTransform: function(layer) {
-    return "		translate3d(" + layer.x + "px," + layer.y + "px," + layer.z + "px) 		scale(" + layer.scale + ")		scale3d(" + layer.scaleX + "," + layer.scaleY + "," + layer.scaleZ + ")		skew(" + layer.skew + "deg," + layer.skew + "deg) 		skewX(" + layer.skewX + "deg)  		skewY(" + layer.skewY + "deg) 		rotateX(" + layer.rotationX + "deg) 		rotateY(" + layer.rotationY + "deg) 		rotateZ(" + layer.rotationZ + "deg) 		";
+    return "		translate3d(" + layer.x + "px," + layer.y + "px," + layer.z + "px) 		scale(" + layer.scale + ")		scale3d(" + layer.scaleX + "," + layer.scaleY + "," + layer.scaleZ + ") 		rotateX(" + layer.rotationX + "deg) 		rotateY(" + layer.rotationY + "deg) 		rotateZ(" + layer.rotationZ + "deg) 		";
   },
   webkitTransformOrigin: function(layer) {
     return "" + (layer.originX * 100) + "% " + (layer.originY * 100) + "%";
@@ -2816,114 +2647,17 @@ exports.LayerStyle = {
   pointerEvents: function(layer) {
     if (layer.ignoreEvents) {
       return "none";
-    } else {
-      return "auto";
     }
-  },
-  boxShadow: function(layer) {
-    if (!layer.shadowColor) {
-      return "";
-    }
-    return "" + layer.shadowX + "px " + layer.shadowY + "px " + layer.shadowBlur + "px " + layer.shadowSpread + "px " + layer.shadowColor;
+    return "auto";
   }
 };
 
 
-},{}],25:[function(require,module,exports){
-var Session, Utils,
-  __slice = [].slice;
-
-Utils = require("./Utils");
-
-Session = require("./Session").Session;
-
-"\nTodo:\n- Better looks\n- Resizable\n- Live in own space on top of all Framer stuff\n";
-
-exports.print = function() {
-  var args, printLayer, printNode;
-  args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-  printLayer = Framer.Session.printLayer;
-  if (!printLayer) {
-    printLayer = new Layer;
-    printLayer.scrollVertical = true;
-    printLayer.ignoreEvents = false;
-    printLayer.html = "";
-    printLayer.style = {
-      "font": "12px/1.35em Menlo",
-      "color": "rgba(0,0,0,.7)",
-      "padding": "8px",
-      "padding-bottom": "30px",
-      "border-top": "1px solid #d9d9d9"
-    };
-    printLayer.opacity = 0.9;
-    printLayer.style.zIndex = 999;
-    printLayer.visible = true;
-    printLayer.backgroundColor = "white";
-    printLayer.width = window.innerWidth;
-    printLayer.height = 160;
-    printLayer.maxY = window.innerHeight;
-  }
-  printNode = document.createElement("div");
-  printNode.innerHTML = "&raquo; " + args.map(Utils.stringify).join(", ") + "<br>";
-  printNode.style["-webkit-user-select"] = "text";
-  printNode.style["cursor"] = "auto";
-  printLayer._element.appendChild(printNode);
-  Framer.Session.printLayer = printLayer;
-  return Utils.delay(0, function() {
-    return printLayer._element.scrollTop = printLayer._element.scrollHeight;
-  });
-};
-
-
-},{"./Session":27,"./Utils":29}],26:[function(require,module,exports){
-var BaseClass, ScreenClass,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-BaseClass = require("./BaseClass").BaseClass;
-
-ScreenClass = (function(_super) {
-  __extends(ScreenClass, _super);
-
-  function ScreenClass(options) {
-    ScreenClass.__super__.constructor.call(this, options);
-    this._setupResizeListener();
-  }
-
-  ScreenClass.define("width", {
-    get: function() {
-      return window.innerWidth;
-    }
-  });
-
-  ScreenClass.define("height", {
-    get: function() {
-      return window.innerHeight;
-    }
-  });
-
-  ScreenClass.prototype._setupResizeListener = function() {
-    var oldResizeFunction,
-      _this = this;
-    oldResizeFunction = window.onresize;
-    return window.onresize = function() {
-      _this.emit("resize", _this);
-      return typeof oldResizeFunction === "function" ? oldResizeFunction() : void 0;
-    };
-  };
-
-  return ScreenClass;
-
-})(BaseClass);
-
-exports.Screen = new ScreenClass;
-
-
-},{"./BaseClass":9}],27:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 exports.Session = {};
 
 
-},{}],28:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var _;
 
 _ = require("lodash");
@@ -2939,16 +2673,14 @@ _.isBool = function(v) {
 exports._ = _;
 
 
-},{"lodash":30,"underscore.string":31}],29:[function(require,module,exports){
-var Screen, Session, Utils, _, __domComplete, __domReady,
+},{"lodash":25,"underscore.string":26}],24:[function(require,module,exports){
+var Session, Utils, _, __domComplete, __domReady,
   __slice = [].slice,
   _this = this;
 
 _ = require("./Underscore")._;
 
 Session = require("./Session").Session;
-
-Screen = require("./Screen").Screen;
 
 Utils = {};
 
@@ -2958,13 +2690,10 @@ Utils.reset = function() {
     return;
   }
   __domComplete = [];
-  Session.printLayer = null;
-  if (Session._LayerList) {
-    _ref = Session._LayerList;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      layer = _ref[_i];
-      layer.removeAllListeners();
-    }
+  _ref = Session._LayerList;
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    layer = _ref[_i];
+    layer.removeAllListeners();
   }
   Session._LayerList = [];
   if ((_ref1 = Session._RootElement) != null) {
@@ -3163,23 +2892,6 @@ Utils.labelLayer = function(layer, text, style) {
   }, style);
   layer.style = style;
   return layer.html = text;
-};
-
-Utils.stringify = function(obj) {
-  try {
-    if (_.isObject(obj)) {
-      return JSON.stringify(obj);
-    }
-  } catch (_error) {
-    "";
-  }
-  if (obj === void 0) {
-    return "undefined";
-  }
-  if (obj.toString) {
-    return obj.toString();
-  }
-  return obj;
 };
 
 Utils.uuid = function() {
@@ -3595,7 +3307,7 @@ Utils.convertPoint = function(input, layerA, layerB) {
 _.extend(exports, Utils);
 
 
-},{"./Screen":26,"./Session":27,"./Underscore":28}],30:[function(require,module,exports){
+},{"./Session":22,"./Underscore":23}],25:[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/**
  * @license
  * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
@@ -10382,7 +10094,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   }
 }.call(this));
 
-},{}],31:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
 //  Underscore.string is freely distributable under the terms of the MIT license.
@@ -11057,7 +10769,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}]},{},[19])
+},{}]},{},[16])
 
 ;
 //# sourceMappingURL=framer.js.map

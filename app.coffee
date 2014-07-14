@@ -53,6 +53,9 @@ PSD.container.animate
 # A lot of this is based on the Material Response Framerjs example:
 # http://examples.framerjs.com/#material-response.framer
 
+background = new BackgroundLayer backgroundColor:"rgba(77, 208, 225, 1.00)"
+
+
 createRectangle = ->
   layer = new Layer
       width: 400, height: 400, backgroundColor: "#fff", shadowY: 2, shadowBlur: 5, borderRadius: "6px", opacity: 0
