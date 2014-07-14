@@ -43,3 +43,9 @@ window.common =
         rightScreen:
           x: 640
       window.PSD[key] = views[key]
+  switchAll: (stateName, views) ->
+    _.each views, (element, index) ->
+      element.states.switch stateName
+  switchInstantAll: (stateName, views) ->
+    _.each views, (element, index) ->
+      element.states.switchInstant stateName

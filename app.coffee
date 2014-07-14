@@ -14,6 +14,10 @@ Layer::move = (x, y, curve, time) ->
     curve: curve
     time: time
 
+Layer::moveInstant = (x, y) ->
+  this.x = this.x + x
+  this.y = this.y + y
+
 Layer::fadeOut = (delay) ->
   this.animate
     properties:
@@ -85,14 +89,15 @@ createRectangle = ->
       shadowY: 0
     barrotated:
       opacity: 0
-#      width: 110
-#      height: 400
-#      y: 400
     bar:
       rotation: 0
       opacity: 1
       width: 400
       height: 110
+    rectangle2: { y: 0 }
+    rectangle3: { y: 110 }
+    rectangle4: { y: 220 }
+    rectangle5: { y: 330 }
 
   return layer
 
@@ -112,46 +117,56 @@ rectangle.states.switchInstant "centerInvisible"
 # Rotate
 utils.delay 0.5, -> rectangle.states.switch "centerBig"
 
+# An object to hold animation sections
+sections = {}
+
 # Run the animations on Click
 #rectangle.on Events.Click, ->
 utils.delay 1, ->
   rectangle.states.animationOptions =
     curve: "spring(150, 22, 1)"
   rectangle.states.switch "rotated"
-  rectangle.on Events.AnimationEnd, afterRotate
+  rectangle.on Events.AnimationEnd, sections.twoBoxes
 
-# afterRotate has all the animations that take place after rotating.
+# afterRotate has animations that take place after rotating.
 # We need it defined in its own function so that we can unbind it.
 # Possibly a good idea to look into underscore's once _.once() function
 # wrapepr to just run the animations once.
-afterRotate = ->
+sections.twoBoxes = ->
+  rectangle.off Events.AnimationEnd, sections.twoBoxes
   rectangle.fadeOut()
   rectangle2.fadeIn()
   rectangle3.fadeIn()
   # Separate into two
-  rectangle2.move(-250, 0)
-  rectangle3.move(250, 0)
+  rectangle2.move -250, 0
+  rectangle3.move 250, 0
   # Move back in
   utils.delay 1, ->
-    rectangle2.move(250, 0, "ease-in", 0.3)
-    rectangle3.move(-250, 0, "ease-in", 0.3)
+    rectangle2.move 250, 0, "ease-in", 0.3
+    rectangle3.move -250, 0, "ease-in", 0.3
     rectangle2.fadeOut()
     rectangle3.fadeOut()
     rectangle.states.switch "unrotated"
-    rectangle.on Events.AnimationEnd, bars
+    rectangle.on Events.AnimationEnd, sections.fourBars
 
-  # Unbind AnimationEnd
-  rectangle.off Events.AnimationEnd, afterRotate
-
-bars = ->
-#  rectangle.states.animationOptions =
-#    curve: "spring(150, 22, 1)"
+sections.fourBars = ->
+  rectangle.off Events.AnimationEnd, sections.fourBars
   rectangle.states.switch "barrotated"
-  rectangle2.states.switch "bar"
-  rectangle3.states.switch "bar"
-  rectangle4.states.switch "bar"
-  rectangle5.states.switch "bar"
-  rectangle3.move(0, 100)
-  rectangle4.move(0, 200)
-  rectangle5.move(0, 300)
-  rectangle.off Events.AnimationEnd, bars
+  common.switchInstantAll("bar", [rectangle2, rectangle3, rectangle4, rectangle5])
+  rectangle2.moveInstant 0, 0
+  rectangle3.moveInstant 0, 110
+  rectangle4.moveInstant 0, 220
+  rectangle5.moveInstant 0, 330
+  rectangle5.move(0, 30)
+  utils.delay 0.05, -> rectangle4.move(0, 10, "ease-in")
+  utils.delay 0.1, -> rectangle3.move(0, -10, "ease-in")
+  utils.delay 0.15, ->
+    rec2anim = rectangle2.move(0, -30, "ease-in")
+    rec2anim.on "end", ->
+      rectangle5.animate
+        properties:
+          shadowY: 27
+          shadowBlur: 24
+        curve: "linear"
+        time: 0.2
+

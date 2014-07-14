@@ -69,6 +69,16 @@
         _results.push(window.PSD[key] = views[key]);
       }
       return _results;
+    },
+    switchAll: function(stateName, views) {
+      return _.each(views, function(element, index) {
+        return element.states["switch"](stateName);
+      });
+    },
+    switchInstantAll: function(stateName, views) {
+      return _.each(views, function(element, index) {
+        return element.states.switchInstant(stateName);
+      });
     }
   };
 
