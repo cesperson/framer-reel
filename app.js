@@ -175,7 +175,6 @@
     rectangle3.moveInstant(0, 110);
     rectangle4.moveInstant(0, 220);
     rectangle5.moveInstant(0, 330);
-    barMove = rectangle5.move(0, 30);
     utils.delay(0.05, function() {
       return rectangle4.move(0, 10, "ease-in");
     });
@@ -186,6 +185,7 @@
       var rec2anim;
       return rec2anim = rectangle2.move(0, -30, "ease-in");
     });
+    barMove = rectangle5.move(0, 30);
     return barMove.on("end", function() {
       var shadowGrow;
       shadowGrow = rectangle5.animate({
@@ -198,21 +198,33 @@
       });
       return shadowGrow.on("end", function() {
         var barMove2;
-        barMove2 = rectangle5.move(0, -270, "ease-in-out", 0.4);
+        barMove2 = rectangle5.move(0, -260, "ease-in-out", 0.4);
         utils.delay(0.05, function() {
-          return rectangle4.move(0, 100, "ease-in-out");
+          return rectangle4.move(0, 130, "ease-in-out");
         });
         utils.delay(0.1, function() {
-          return rectangle3.move(0, 110, "ease-in-out");
+          return rectangle3.move(0, 130, "ease-in-out");
         });
         return barMove2.on("end", function() {
-          return rectangle5.animate({
-            properties: {
-              shadowY: 2,
-              shadowBlur: 5
-            },
-            curve: "linear",
-            time: 0.2
+          return utils.delay(0.2, function() {
+            rectangle5.animate({
+              properties: {
+                shadowY: 2,
+                shadowBlur: 5
+              },
+              curve: "linear",
+              time: 0.2
+            });
+            rectangle4.move(0, -40);
+            rectangle3.move(0, -20);
+            rectangle2.move(0, 20);
+            rectangle5.fadeOut();
+            rectangle4.fadeOut();
+            rectangle3.fadeOut();
+            rectangle2.fadeOut();
+            return utils.delay(0.1, function() {
+              return rectangle.fadeIn();
+            });
           });
         });
       });
