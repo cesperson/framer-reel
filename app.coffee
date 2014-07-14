@@ -157,16 +157,30 @@ sections.fourBars = ->
   rectangle3.moveInstant 0, 110
   rectangle4.moveInstant 0, 220
   rectangle5.moveInstant 0, 330
-  rectangle5.move(0, 30)
+
+  barMove = rectangle5.move(0, 30)
   utils.delay 0.05, -> rectangle4.move(0, 10, "ease-in")
   utils.delay 0.1, -> rectangle3.move(0, -10, "ease-in")
-  utils.delay 0.15, ->
-    rec2anim = rectangle2.move(0, -30, "ease-in")
-    rec2anim.on "end", ->
-      rectangle5.animate
-        properties:
-          shadowY: 27
-          shadowBlur: 24
-        curve: "linear"
-        time: 0.2
+  utils.delay 0.15, -> rec2anim = rectangle2.move(0, -30, "ease-in")
+
+  barMove.on "end", ->
+    shadowGrow = rectangle5.animate
+      properties:
+        shadowY: 27
+        shadowBlur: 24
+      curve: "linear"
+      time: 0.2
+    shadowGrow.on "end", ->
+      barMove2 = rectangle5.move 0, -270, "ease-in-out", 0.4
+      utils.delay 0.05, -> rectangle4.move 0, 100, "ease-in-out"
+      utils.delay 0.1, -> rectangle3.move 0, 110, "ease-in-out"
+      barMove2.on "end", ->
+        rectangle5.animate
+          properties:
+            shadowY: 2
+            shadowBlur: 5
+          curve: "linear"
+          time: 0.2
+
+
 

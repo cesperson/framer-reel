@@ -167,6 +167,7 @@
   };
 
   sections.fourBars = function() {
+    var barMove;
     rectangle.off(Events.AnimationEnd, sections.fourBars);
     rectangle.states["switch"]("barrotated");
     common.switchInstantAll("bar", [rectangle2, rectangle3, rectangle4, rectangle5]);
@@ -174,24 +175,45 @@
     rectangle3.moveInstant(0, 110);
     rectangle4.moveInstant(0, 220);
     rectangle5.moveInstant(0, 330);
-    rectangle5.move(0, 30);
+    barMove = rectangle5.move(0, 30);
     utils.delay(0.05, function() {
       return rectangle4.move(0, 10, "ease-in");
     });
     utils.delay(0.1, function() {
       return rectangle3.move(0, -10, "ease-in");
     });
-    return utils.delay(0.15, function() {
+    utils.delay(0.15, function() {
       var rec2anim;
-      rec2anim = rectangle2.move(0, -30, "ease-in");
-      return rec2anim.on("end", function() {
-        return rectangle5.animate({
-          properties: {
-            shadowY: 27,
-            shadowBlur: 24
-          },
-          curve: "linear",
-          time: 0.2
+      return rec2anim = rectangle2.move(0, -30, "ease-in");
+    });
+    return barMove.on("end", function() {
+      var shadowGrow;
+      shadowGrow = rectangle5.animate({
+        properties: {
+          shadowY: 27,
+          shadowBlur: 24
+        },
+        curve: "linear",
+        time: 0.2
+      });
+      return shadowGrow.on("end", function() {
+        var barMove2;
+        barMove2 = rectangle5.move(0, -270, "ease-in-out", 0.4);
+        utils.delay(0.05, function() {
+          return rectangle4.move(0, 100, "ease-in-out");
+        });
+        utils.delay(0.1, function() {
+          return rectangle3.move(0, 110, "ease-in-out");
+        });
+        return barMove2.on("end", function() {
+          return rectangle5.animate({
+            properties: {
+              shadowY: 2,
+              shadowBlur: 5
+            },
+            curve: "linear",
+            time: 0.2
+          });
         });
       });
     });
