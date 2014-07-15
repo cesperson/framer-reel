@@ -42,15 +42,15 @@ createRectangle = ->
       opacity: 1
       height: 400
     rotated:
-      shadowY: 0
       rotation: 90
       height: 800
       y: -40
+      shadowY: 0
+      shadowX: 12
     unrotated:
       opacity: 1
       height: 400
       y: layer.originalFrame.y
-      shadowY: 0
     barrotated:
       opacity: 0
     bar:
@@ -149,8 +149,8 @@ sections.fourBars = ->
         utils.delay 0.2, ->
           shadowReset = rectangle5.animate
             properties:
-              shadowY: 12
-              shadowBlur: 15
+              shadowY: 3
+              shadowBlur: 5
             curve: "linear"
             time: 0.2
           shadowReset.on "end", ->
