@@ -6,6 +6,10 @@
 
   tools.storeOriginal(PSD);
 
+  background = new BackgroundLayer({
+    backgroundColor: "rgba(77, 208, 225, 1.00)"
+  });
+
   PSD.container.brightness = 0;
 
   PSD.container.animate({
@@ -14,10 +18,6 @@
     },
     curve: "linear",
     time: 0.5
-  });
-
-  background = new BackgroundLayer({
-    backgroundColor: "rgba(77, 208, 225, 1.00)"
   });
 
   createRectangle = function() {
@@ -98,7 +98,6 @@
   sections = {};
 
   sections.oneBox = function() {
-    rectangle.off(Events.Click, sections.oneBox);
     tools.switchInstantAll("default", [rectangle2, rectangle3, rectangle4, rectangle5]);
     rectangle.states["switch"]("rotated");
     return utils.delay(0.3, sections.twoBoxes);
