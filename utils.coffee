@@ -1,4 +1,4 @@
-window.common =
+window.tools =
   fadeIn: (view, delay) ->
     view.animate
       properties:

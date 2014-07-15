@@ -4,7 +4,7 @@
 
   PSD = Framer.Importer.load("imported/google-reel");
 
-  common.storeOriginal(PSD);
+  tools.storeOriginal(PSD);
 
   PSD.container.brightness = 0;
 
@@ -26,8 +26,8 @@
       width: 400,
       height: 400,
       backgroundColor: "#fff",
-      shadowY: 2,
-      shadowBlur: 5,
+      shadowY: 12,
+      shadowBlur: 15,
       borderRadius: "6px",
       opacity: 0
     });
@@ -66,18 +66,6 @@
         opacity: 1,
         width: 400,
         height: 110
-      },
-      rectangle2: {
-        y: 0
-      },
-      rectangle3: {
-        y: 110
-      },
-      rectangle4: {
-        y: 220
-      },
-      rectangle5: {
-        y: 330
       }
     });
     return layer;
@@ -99,19 +87,24 @@
 
   rectangle.states.switchInstant("centerInvisible");
 
+  rectangle.states.animationOptions = {
+    curve: "spring(150, 22, 1)"
+  };
+
   utils.delay(0.5, function() {
     return rectangle.states["switch"]("centerBig");
   });
 
   sections = {};
 
-  utils.delay(1, function() {
-    rectangle.states.animationOptions = {
-      curve: "spring(150, 22, 1)"
-    };
+  sections.oneBox = function() {
+    rectangle.off(Events.Click, sections.oneBox);
+    tools.switchInstantAll("default", [rectangle2, rectangle3, rectangle4, rectangle5]);
     rectangle.states["switch"]("rotated");
-    return rectangle.on(Events.AnimationEnd, sections.twoBoxes);
-  });
+    return utils.delay(0.3, sections.twoBoxes);
+  };
+
+  utils.delay(0.5, sections.oneBox);
 
   sections.twoBoxes = function() {
     rectangle.off(Events.AnimationEnd, sections.twoBoxes);
@@ -134,7 +127,7 @@
     var barMove;
     rectangle.off(Events.AnimationEnd, sections.fourBars);
     rectangle.states["switch"]("barrotated");
-    common.switchInstantAll("bar", [rectangle2, rectangle3, rectangle4, rectangle5]);
+    tools.switchInstantAll("bar", [rectangle2, rectangle3, rectangle4, rectangle5]);
     rectangle2.moveInstant(0, 0);
     rectangle3.moveInstant(0, 110);
     rectangle4.moveInstant(0, 220);
@@ -171,16 +164,16 @@
         });
         return barMove2.on("end", function() {
           return utils.delay(0.2, function() {
-            var shadowBack;
-            shadowBack = rectangle5.animate({
+            var shadowReset;
+            shadowReset = rectangle5.animate({
               properties: {
-                shadowY: 2,
-                shadowBlur: 5
+                shadowY: 12,
+                shadowBlur: 15
               },
               curve: "linear",
               time: 0.2
             });
-            return shadowBack.on("end", function() {
+            return shadowReset.on("end", function() {
               rectangle4.move(0, -40);
               rectangle3.move(0, -20);
               rectangle2.move(0, 20);
@@ -189,7 +182,11 @@
               rectangle3.fadeOut();
               rectangle2.fadeOut();
               return utils.delay(0.1, function() {
-                return rectangle.fadeIn();
+                var finalFade;
+                finalFade = rectangle.fadeIn();
+                return finalFade.on("end", function() {
+                  return utils.delay(1, sections.oneBox);
+                });
               });
             });
           });

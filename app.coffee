@@ -1,7 +1,7 @@
 PSD = Framer.Importer.load("imported/google-reel")
 
 # Add original frame information to each layer
-common.storeOriginal(PSD)
+tools.storeOriginal(PSD)
 
 ## Fade from black ## --------------------------------------------------------------------------------------------------
 PSD.container.brightness = 0
@@ -23,7 +23,7 @@ background = new BackgroundLayer backgroundColor:"rgba(77, 208, 225, 1.00)"
 # is probably a bit much.
 createRectangle = ->
   layer = new Layer
-      width: 400, height: 400, backgroundColor: "#fff", shadowY: 2, shadowBlur: 5, borderRadius: "6px", opacity: 0
+      width: 400, height: 400, backgroundColor: "#fff", shadowY: 12, shadowBlur: 15, borderRadius: "6px", opacity: 0
   layer.shadowColor = "rgba(0, 0, 0, 0.2)"
 
   # Add rectangle to container and center it
@@ -58,10 +58,6 @@ createRectangle = ->
       opacity: 1
       width: 400
       height: 110
-    rectangle2: { y: 0 }
-    rectangle3: { y: 110 }
-    rectangle4: { y: 220 }
-    rectangle5: { y: 330 }
   return layer
 
 # Create rectangle
@@ -77,19 +73,26 @@ rectangle.states.animationOptions =
 # Set initial rectangle position
 rectangle.states.switchInstant "centerInvisible"
 
+rectangle.states.animationOptions =
+  curve: "spring(150, 22, 1)"
+
 # Rotate
 utils.delay 0.5, -> rectangle.states.switch "centerBig"
 
 # An object to hold animation sections
 sections = {}
 
-# Run the animations on Click
-#rectangle.on Events.Click, ->
-utils.delay 1, ->
-  rectangle.states.animationOptions =
-    curve: "spring(150, 22, 1)"
+sections.oneBox = ->
+  # Unbind click
+  rectangle.off Events.Click, sections.oneBox
+  # Reset positions to run animation
+  tools.switchInstantAll "default", [rectangle2, rectangle3, rectangle4, rectangle5]
   rectangle.states.switch "rotated"
-  rectangle.on Events.AnimationEnd, sections.twoBoxes
+  # rectangle.on Events.AnimationEnd, sections.twoBoxes
+  utils.delay 0.3, sections.twoBoxes
+
+# Run the animations automatically the first time through
+utils.delay 0.5, sections.oneBox
 
 # afterRotate has animations that take place after rotating.
 # We need it defined in its own function so that we can unbind it.
@@ -117,7 +120,7 @@ sections.twoBoxes = ->
 sections.fourBars = ->
   rectangle.off Events.AnimationEnd, sections.fourBars
   rectangle.states.switch "barrotated"
-  common.switchInstantAll("bar", [rectangle2, rectangle3, rectangle4, rectangle5])
+  tools.switchInstantAll "bar", [rectangle2, rectangle3, rectangle4, rectangle5]
   rectangle2.moveInstant 0, 0
   rectangle3.moveInstant 0, 110
   rectangle4.moveInstant 0, 220
@@ -144,13 +147,13 @@ sections.fourBars = ->
       utils.delay 0.1, -> rectangle3.move 0, 130, "ease-in-out"
       barMove2.on "end", ->
         utils.delay 0.2, ->
-          shadowBack = rectangle5.animate
+          shadowReset = rectangle5.animate
             properties:
-              shadowY: 2
-              shadowBlur: 5
+              shadowY: 12
+              shadowBlur: 15
             curve: "linear"
             time: 0.2
-          shadowBack.on "end", ->
+          shadowReset.on "end", ->
             rectangle4.move 0, -40
             rectangle3.move 0, -20
             rectangle2.move 0, 20
@@ -158,4 +161,10 @@ sections.fourBars = ->
             rectangle4.fadeOut()
             rectangle3.fadeOut()
             rectangle2.fadeOut()
-            utils.delay 0.1, -> rectangle.fadeIn()
+            utils.delay 0.1, ->
+              finalFade = rectangle.fadeIn()
+              # Rebind click to allow re-run
+              # finalFade.on "end", -> rectangle.on Events.Click, sections.oneBox
+              # Re-run forever, for ever, for ev er.
+              finalFade.on "end", ->
+                utils.delay 1, sections.oneBox
