@@ -82,4 +82,44 @@
     }
   };
 
+  Layer.prototype.move = function(x, y, curve, time) {
+    curve = curve || "spring(200, 20, 10)";
+    time = time || 0.2;
+    return this.animate({
+      properties: {
+        x: this.x + x,
+        y: this.y + y
+      },
+      curve: curve,
+      time: time
+    });
+  };
+
+  Layer.prototype.moveInstant = function(x, y) {
+    this.x = this.x + x;
+    return this.y = this.y + y;
+  };
+
+  Layer.prototype.fadeOut = function(delay) {
+    return this.animate({
+      properties: {
+        opacity: 0
+      },
+      curve: 'ease-in',
+      delay: delay,
+      time: 0.2
+    });
+  };
+
+  Layer.prototype.fadeIn = function(delay) {
+    return this.animate({
+      properties: {
+        opacity: 1
+      },
+      curve: 'ease-in',
+      delay: delay,
+      time: 0.2
+    });
+  };
+
 }).call(this);

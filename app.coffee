@@ -3,47 +3,6 @@ PSD = Framer.Importer.load("imported/google-reel")
 # Add original frame information to each layer
 common.storeOriginal(PSD)
 
-# Maybe just try shifting
-Layer::move = (x, y, curve, time) ->
-  curve = curve || "spring(200, 20, 10)"
-  time = time || 0.2
-  this.animate
-    properties:
-      x: this.x + x
-      y: this.y + y
-    curve: curve
-    time: time
-
-Layer::moveInstant = (x, y) ->
-  this.x = this.x + x
-  this.y = this.y + y
-
-Layer::fadeOut = (delay) ->
-  this.animate
-    properties:
-      opacity: 0
-    curve: 'ease-in'
-    delay: delay
-    time: 0.2
-
-Layer::fadeIn = (delay) ->
-  this.animate
-    properties:
-      opacity: 1
-    curve: 'ease-in'
-    delay: delay
-    time: 0.2
-
-# Set default spring animation from Android Album animation Framerjs example
-# http://examples.framerjs.com/#album-animation.framer
-#Framer.Defaults.Animation =
-#  curve: "spring"
-#  curveOptions:
-#    tension: 260
-#    friction: 30
-#    velocity: 0
-#    tolerance: 0.01
-
 ## Fade from black ## --------------------------------------------------------------------------------------------------
 PSD.container.brightness = 0
 PSD.container.animate
@@ -57,18 +16,23 @@ PSD.container.animate
 # A lot of this is based on the Material Response Framerjs example:
 # http://examples.framerjs.com/#material-response.framer
 
-#background = new BackgroundLayer backgroundColor:"rgba(77, 208, 225, 1.00)"
+background = new BackgroundLayer backgroundColor:"rgba(77, 208, 225, 1.00)"
 
+
+# Returns a rectangle --- each rectangle doesn't really need each state so this
+# is probably a bit much.
 createRectangle = ->
   layer = new Layer
       width: 400, height: 400, backgroundColor: "#fff", shadowY: 2, shadowBlur: 5, borderRadius: "6px", opacity: 0
   layer.shadowColor = "rgba(0, 0, 0, 0.2)"
+
   # Add rectangle to container and center it
   layer.superLayer = PSD.container
   layer.center()
   layer.original
   layer.originalFrame = layer.frame
 
+  # Add rectangle layer state
   layer.states.add
     centerInvisible:
       scale: 0.01
@@ -98,7 +62,6 @@ createRectangle = ->
     rectangle3: { y: 110 }
     rectangle4: { y: 220 }
     rectangle5: { y: 330 }
-
   return layer
 
 # Create rectangle
@@ -137,9 +100,11 @@ sections.twoBoxes = ->
   rectangle.fadeOut()
   rectangle2.fadeIn()
   rectangle3.fadeIn()
+
   # Separate into two
   rectangle2.move -250, 0
   rectangle3.move 250, 0
+
   # Move back in
   utils.delay 1, ->
     rectangle2.move 250, 0, "ease-in", 0.3
@@ -163,30 +128,34 @@ sections.fourBars = ->
   utils.delay 0.15, -> rec2anim = rectangle2.move(0, -30, "ease-in")
 
   barMove = rectangle5.move(0, 30)
+
+  # Might be able to do this strictly with delays to prevent all
+  # the nesting.
   barMove.on "end", ->
-    shadowGrow = rectangle5.animate
+    shadowChange = rectangle5.animate
       properties:
         shadowY: 27
         shadowBlur: 24
       curve: "linear"
       time: 0.2
-    shadowGrow.on "end", ->
+    shadowChange.on "end", ->
       barMove2 = rectangle5.move 0, -260, "ease-in-out", 0.4
       utils.delay 0.05, -> rectangle4.move 0, 130, "ease-in-out"
       utils.delay 0.1, -> rectangle3.move 0, 130, "ease-in-out"
       barMove2.on "end", ->
         utils.delay 0.2, ->
-          rectangle5.animate
+          shadowBack = rectangle5.animate
             properties:
               shadowY: 2
               shadowBlur: 5
             curve: "linear"
             time: 0.2
-          rectangle4.move 0, -40
-          rectangle3.move 0, -20
-          rectangle2.move 0, 20
-          rectangle5.fadeOut()
-          rectangle4.fadeOut()
-          rectangle3.fadeOut()
-          rectangle2.fadeOut()
-          utils.delay 0.1, -> rectangle.fadeIn()
+          shadowBack.on "end", ->
+            rectangle4.move 0, -40
+            rectangle3.move 0, -20
+            rectangle2.move 0, 20
+            rectangle5.fadeOut()
+            rectangle4.fadeOut()
+            rectangle3.fadeOut()
+            rectangle2.fadeOut()
+            utils.delay 0.1, -> rectangle.fadeIn()

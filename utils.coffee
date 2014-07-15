@@ -49,3 +49,44 @@ window.common =
   switchInstantAll: (stateName, views) ->
     _.each views, (element, index) ->
       element.states.switchInstant stateName
+
+# Add helper functions to Layer prototype
+Layer::move = (x, y, curve, time) ->
+  curve = curve || "spring(200, 20, 10)"
+  time = time || 0.2
+  this.animate
+    properties:
+      x: this.x + x
+      y: this.y + y
+    curve: curve
+    time: time
+
+Layer::moveInstant = (x, y) ->
+  this.x = this.x + x
+  this.y = this.y + y
+
+Layer::fadeOut = (delay) ->
+  this.animate
+    properties:
+      opacity: 0
+    curve: 'ease-in'
+    delay: delay
+    time: 0.2
+
+Layer::fadeIn = (delay) ->
+  this.animate
+    properties:
+      opacity: 1
+    curve: 'ease-in'
+    delay: delay
+    time: 0.2
+
+# Set default spring animation from Android Album animation Framerjs example
+# http://examples.framerjs.com/#album-animation.framer
+#Framer.Defaults.Animation =
+#  curve: "spring"
+#  curveOptions:
+#    tension: 260
+#    friction: 30
+#    velocity: 0
+#    tolerance: 0.01
